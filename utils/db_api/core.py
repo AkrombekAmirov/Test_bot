@@ -8,13 +8,8 @@ from sqlalchemy.exc import OperationalError
 from typing import Optional, List, Type
 from datetime import datetime
 from json import dumps
-import asyncio
-import logging
+from asyncio import sleep
 from data import DATABASE_URL
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 
 class DatabaseService:
     MAX_RETRIES = 5  # Katta yuklanish uchun qayta urinishlar soni oshirilgan
@@ -52,7 +47,7 @@ class DatabaseService:
                 except OperationalError as e:
                     self.logging.error(f"Database connection error on add attempt {retries + 1}: {e}")
                     retries += 1
-                    await asyncio.sleep(self.RETRY_DELAY)
+                    await sleep(self.RETRY_DELAY)
                 except Exception as e:
                     self.logging.error(f"Error adding instance: {e}")
                     break
@@ -72,7 +67,7 @@ class DatabaseService:
                 except OperationalError as e:
                     self.logging.error(f"Database connection error on update attempt {retries + 1}: {e}")
                     retries += 1
-                    await asyncio.sleep(self.RETRY_DELAY)
+                    await sleep(self.RETRY_DELAY)
                 except Exception as e:
                     self.logging.error(f"Error updating instance: {e}")
                     break
@@ -113,7 +108,7 @@ class DatabaseService:
                 except OperationalError as e:
                     self.logging.error(f"Database connection error on get attempt {retries + 1}: {e}")
                     retries += 1
-                    await asyncio.sleep(self.RETRY_DELAY)
+                    await sleep(self.RETRY_DELAY)
                 except Exception as e:
                     self.logging.error(f"Error retrieving data from {model.__name__}: {e}")
                     break

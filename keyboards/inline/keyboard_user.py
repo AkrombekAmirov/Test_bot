@@ -22,15 +22,15 @@ admin_menu = InlineKeyboardMarkup(
 
 yonalish_nomi_keyboard = InlineKeyboardMarkup(
     inline_keyboard=[
-        [
-            InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti tarbiyachisi", callback_data="faculty0"),
-        ],
+        # [
+        #     InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti tarbiyachisi", callback_data="faculty0"),
+        # ],
         # [
         #     InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti psixologi", callback_data="faculty1"),
         # ],
-        # [
-        #     InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti direktori", callback_data="faculty2"),
-        # ],
+        [
+            InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti direktori", callback_data="faculty2"),
+        ],
         # [
         #     InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti metodisti", callback_data="faculty3"),
         # ],

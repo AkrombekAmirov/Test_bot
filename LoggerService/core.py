@@ -26,7 +26,7 @@ class LoggerService:
         formatter = Formatter(log_format)
 
         # Fayl rotatsiyasi uchun handler
-        handler = RotatingFileHandler(log_file_path, maxBytes=max_bytes, backupCount=backup_count)
+        handler = RotatingFileHandler(log_file_path, maxBytes=max_bytes, backupCount=backup_count, encoding="utf-8")
         handler.setLevel(log_level)
         handler.setFormatter(formatter)
 

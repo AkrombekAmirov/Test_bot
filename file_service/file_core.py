@@ -20,3 +20,9 @@ async def read_file(file_path: str, subject_id: int):
         print(e)
         return None
 
+
+async def read_user_info(passport: str):
+    sheet = load_workbook(await get_path(file_name='user_info.xlsx')).active
+    for row in sheet.iter_rows(values_only=True):
+        if str(row[1]) == str(passport):
+            return row

@@ -3,6 +3,14 @@ __pycache__/
 *.py[cod]
 *$py.class
 .idea
+backup_file/Malaka_oshirish26.11.2024.sql
+backup_file/backup.sql
+backup_file/Database2024-10-21_12-33-54.sql
+backup_file/MMTMkontrakt.sql
+backup_file/Database_2024-10-21_12-38-28.sql
+LoggerService/app.log
+LoggerService/app.log.1
+LoggerService/app.log.2
 
 # C extensions
 *.so
