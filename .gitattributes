@@ -1,0 +1,1 @@
+backup_file/Malaka_oshirish26.11.2024.sql filter=lfs diff=lfs merge=lfs -text

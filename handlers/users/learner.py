@@ -1,16 +1,16 @@
 from aiogram.utils.exceptions import TelegramAPIError, Throttled
 from tenacity import retry, stop_after_attempt, wait_exponential
 from keyboards import faculty_file_map2, yonalish_nomi_keyboard
-from utils import DatabaseService, Question
+from utils import DatabaseService, Question, Result
 from aiogram.dispatcher import FSMContext
 from LoggerService import LoggerService
+from file_service import read_user_info
 from aiocache import cached
 from functools import wraps
 from aiogram import types
 from loader import dp
 import random
 import json
-from file_service import read_user_info
 
 # Database initialization
 db = DatabaseService()
@@ -52,6 +52,9 @@ async def start(call: types.CallbackQuery, state: FSMContext):
 @dp.message_handler(content_types=types.ContentType.TEXT)
 async def start(message: types.Message, state: FSMContext):
     try:
+        if len(await db.get(Result, filter_by={"user_id": message.from_user.id})) >= 2:
+            await message.answer("❌ Sizga berilgan 2 ta imkoniyatdan foydalanib bo'ldingiz...")
+            return
         if await read_user_info(message.text):
             user_info = await read_user_info(message.text)
             await message.answer(f"{user_info[0]} testni boshlang!", reply_markup=yonalish_nomi_keyboard)
@@ -76,7 +79,8 @@ async def start_test(call: types.CallbackQuery, state: FSMContext):
     try:
         if await db.get_user_by_id(user_id=user_id) is not None:
             user_info = await db.get_user_by_id(user_id=user_id)
-            sub = await db.get_subject(faculty_file_map2.get(f"faculty{user_info.phone_number}"))
+            sub = await db.get_subject(faculty_file_map2.get(f"faculty{int(user_info.phone_number)}"))
+            sub = await db.get_subject(faculty_file_map2.get(f"faculty{int(user_info.phone_number) + 1}"))
             await call.message.answer(
                 f"❗️Sizga {sub.name} yunalishi buyicha testlar taqdim qilindi. Agar yo'nalishingizga mos bo'lmagan test taqdim qilingan holatda testni to'xtatib adminga murojaat qiling❗️")
             if sub is not None:
@@ -89,7 +93,7 @@ async def start_test(call: types.CallbackQuery, state: FSMContext):
                     })
                 elif await db.get_active_result(user_id=user_id) is None:
                     # Yangi test boshlash
-                    all_questions = await db.get(model=Question, filter_by={"subject_id": int(sub.subject_val)})
+                    all_questions = await db.get(model=Question, filter_by={"subject_id": int(user_info.phone_number)})
                     selected_questions = random.sample(all_questions, k=25)
 
                     # Test natijasini `Result` jadvalida boshlash
@@ -98,10 +102,6 @@ async def start_test(call: types.CallbackQuery, state: FSMContext):
                         subject_id=sub.id,
                         question_ids=json.dumps([q.id for q in selected_questions])
                     )
-                    await state.update_data({
-                        "result_id": new_result_id,
-                    })
-
                     # Birinchi yoki keyingi savolni yuborish
                     await start_test_from_number(message=call.message, state=state, result_id=new_result_id, number=0,
                                                  user_id=call.from_user.id)
@@ -170,16 +170,15 @@ async def handle_answer(call: types.CallbackQuery, state: FSMContext):
 
         # Test yakunlangani tekshirish
         if result.number >= 25:
-            await end_test(call.message, state)
+            await end_test(call.message, state, user_.get("result_id"))
             return
     await start_test_from_number(call.message, state, result_id=user_.get("result_id"), number=result.number,
                                  correct_answer=result.correct_answers, user_id=call.from_user.id)
 
 
-async def end_test(message: types.Message, state: FSMContext):
+async def end_test(message: types.Message, state: FSMContext, result_id: int):
     """Test tugagach foydalanuvchiga natijani ko'rsatish."""
-    data = await state.get_data()
-    result = await db.get_result_id(data["result_id"])
+    result = await db.get_result_id(result_id=result_id)
     if result:
         summary = (
             f"Hurmatli {(await db.get_user_by_id(user_id=int(result.user_id))).name}!\n"

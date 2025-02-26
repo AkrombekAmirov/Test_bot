@@ -28,15 +28,24 @@ yonalish_nomi_keyboard = InlineKeyboardMarkup(
         # [
         #     InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti psixologi", callback_data="faculty1"),
         # ],
-        [
-            InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti direktori", callback_data="faculty2"),
-        ],
+        # [
+        #     InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti direktori", callback_data="faculty2"),
+        # ],
         # [
         #     InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti metodisti", callback_data="faculty3"),
         # ],
         [
             InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti defektologi/logopedi", callback_data="faculty4"),
         ],
+        # [
+        #     InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti musiqa rahbari", callback_data="faculty5"),
+
+        # [
+        #     InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti metodisti", callback_data="faculty3"),
+        # ],
+        # [
+        #     InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti defektologi/logopedi", callback_data="faculty4"),
+        # ],
         # [
         #     InlineKeyboardButton(text="Maktabgacha ta’lim tashkiloti musiqa rahbari", callback_data="faculty5"),
         # ],
