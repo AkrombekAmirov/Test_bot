@@ -79,7 +79,7 @@ async def start_test(call: types.CallbackQuery, state: FSMContext):
     try:
         if await db.get_user_by_id(user_id=user_id) is not None:
             user_info = await db.get_user_by_id(user_id=user_id)
-            sub = await db.get_subject(faculty_file_map2.get(f"faculty{int(user_info.phone_number)}"))
+                sub = await db.get_subject(faculty_file_map2.get(f"faculty{int(user_info.phone_number)}"))
             await call.message.answer(
                 f"❗️Sizga {sub.name} yunalishi buyicha testlar taqdim qilindi. Agar yo'nalishingizga mos bo'lmagan test taqdim qilingan holatda testni to'xtatib adminga murojaat qiling❗️")
             if sub is not None:
